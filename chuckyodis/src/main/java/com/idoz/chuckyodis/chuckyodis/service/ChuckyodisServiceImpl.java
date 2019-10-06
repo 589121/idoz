@@ -6,11 +6,13 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+import java.util.function.LongSupplier;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -30,6 +32,8 @@ import com.idoz.chuckyodis.chuckyodis.domain.ChuckNorrisEntety;
 import com.idoz.chuckyodis.chuckyodis.domain.ChuckNorrisYodisEntety;
 import com.idoz.chuckyodis.chuckyodis.domain.Factyodis;
 import com.idoz.chuckyodis.chuckyodis.dto.FactyodisDto;
+
+ 
 
 
  
@@ -76,7 +80,7 @@ public class ChuckyodisServiceImpl implements ChuckyodisService{
 
 
 		String value = chuckNorrisEntety.getValue();
-
+System.out.println(value);
 			 /*
               * Yoda
               */
@@ -102,7 +106,7 @@ public class ChuckyodisServiceImpl implements ChuckyodisService{
       factyodis.setEntered_date(entered);
       factyodis.setFact_text(chuckNorrisYodisEntety.getContents().getTranslated());	
       factyodis.setFact_id((int)(Math.random()*100));
-		
+		System.out.println(factyodis.getFact_text());
 	 repository.save(factyodis);
 		
 		
@@ -112,30 +116,18 @@ public class ChuckyodisServiceImpl implements ChuckyodisService{
 	
 	
 	 
-	public Set <FactyodisDto> getAllChuckYodis(int page, int page_size) {
+	public Set <FactyodisDto> getAllChuckYodis(int page) {
 		
-		Pageable pageable = PageRequest.of(page, page_size);
-		Query query = new Query().with(pageable);
-	
+		
+		
+		
+		//Pageable pageable = PageRequest.of(page, 10);
+		 
 
-	/*	Set <FactyodisDto> allFactyodis= repository.findAll()
+		@SuppressWarnings("deprecation")
+		Set <FactyodisDto> allFactyodis= repository.findAll(new PageRequest (page,10))
 				.stream().map(x -> convertToFactyodisDto(x)).collect(Collectors.toSet());;
-		 */
-				
-		
-		List<Factyodis> factyodis = mongoTemplate
-				.findAll( Factyodis.class).stream()
-				.collect(Collectors.toList());
-		
-		Page<Factyodis> Page = PageableExecutionUtils.getPage(factyodis, pageable,
-				() -> mongoTemplate.count(query, Factyodis.class));
-		
-		List<Factyodis> toDto = Page.getContent();
-		Set <FactyodisDto> allFactyodis= new HashSet<>();
-		
-		for (Factyodis fy : toDto) {
-			allFactyodis.add(convertToFactyodisDto(fy));
-		}
+		 
 
 		return allFactyodis;
 

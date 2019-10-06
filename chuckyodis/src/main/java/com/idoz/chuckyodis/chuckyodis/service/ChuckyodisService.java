@@ -9,7 +9,7 @@ public interface ChuckyodisService {
 
 	FactyodisDto getChuckYodis();
 	
-	Set <FactyodisDto> getAllChuckYodis(int page, int page_size);
+	Set <FactyodisDto> getAllChuckYodis(int page);
 		
 	
 	

@@ -27,10 +27,10 @@ ChuckyodisService service;
 		return service.getChuckYodis();
 	}
 	
-	@GetMapping("/getAll/{page}/{page_size}")
-	public Set <FactyodisDto> getAllChuckYodis(@PathVariable int page, @PathVariable int page_size) {
+	@GetMapping("/getAll/")
+	public Set <FactyodisDto> getAllChuckYodis(@RequestParam (defaultValue="0") int page) {
 		
-		return service.getAllChuckYodis(page,page_size);
+		return service.getAllChuckYodis(page);
 	}
 
 }
